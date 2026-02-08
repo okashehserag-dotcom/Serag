@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>مرساة الدراسة</title>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b1020">
+  <link rel="icon" href="icon-192.png">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">⚓</div>
+      <div>
+        <div class="title">مرساة الدراسة</div>
+        <div class="subtitle" id="greeting">جاهز نثبّت اليوم؟</div>
+      </div>
+    </div>
+    <button class="ghost" id="btnExport" title="تصدير بياناتك">تصدير</button>
+  </header>
+
+  <main class="wrap">
+    <!-- HOME -->
+    <section class="page active" id="page-home">
+      <div class="hero">
+        <div class="hero-left">
+          <div class="pill">
+            <span>🔥</span>
+            <span>ستريك: <b id="streak">0</b> أيام</span>
+          </div>
+
+          <div class="pill">
+            <span>⏱️</span>
+            <span>هذا الأسبوع: <b id="weekHours">0.0</b> ساعة</span>
+          </div>
+
+          <div class="pill">
+            <span>✅</span>
+            <span>مهام اليوم: <b id="doneToday">0</b>/<b id="totalToday">0</b></span>
+          </div>
+        </div>
+
+        <div class="hero-right card glass">
+          <div class="card-head">
+            <h2>مؤقّت التركيز</h2>
+            <div class="mini" id="timerModeLabel">وضع: تركيز</div>
+          </div>
+
+          <div class="timer">
+            <div class="time" id="timerText">25:00</div>
+            <div class="progress">
+              <div class="bar" id="timerBar"></div>
+            </div>
+          </div>
+
+          <div class="timer-actions">
+            <button class="primary" id="btnStart">ابدأ</button>
+            <button class="secondary" id="btnPause">إيقاف مؤقت</button>
+            <button class="ghost" id="btnReset">إعادة</button>
+          </div>
+
+          <div class="modes">
+            <button class="chip active" data-mode="focus">تركيز 25</button>
+            <button class="chip" data-mode="short">راحة 5</button>
+            <button class="chip" data-mode="long">راحة 15</button>
+          </div>
+
+          <div class="hint">
+            كل جلسة تركيز مكتملة = +25 دقيقة تلقائيًا ضمن إحصائيات الأسبوع.
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-head">
+            <h2>مهام اليوم</h2>
+            <button class="ghost" id="btnClearDone">مسح المنجَز</button>
+          </div>
+
+          <div class="row">
+            <input class="input" id="taskInput" placeholder="اكتب مهمة قصيرة… مثال: حل 20 سؤال رياضيات" />
+            <button class="primary" id="btnAddTask">إضافة</button>
+          </div>
+
+          <div class="list" id="taskList"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2>تثبيت اليوم</h2>
+            <div class="mini">اضغط لما تخلّص شغلك اليوم</div>
+          </div>
+
+          <button class="big" id="btnDoneToday">
+            ✅ أنهيت يومي
+          </button>
+
+          <div class="note" id="doneNote"></div>
+          <div class="hint">
+            “تثبيت اليوم” يحسب الستريك تلقائيًا بناءً على آخر يوم مُثبت.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLAN -->
+    <section class="page" id="page-plan">
+      <div class="card">
+        <div class="card-head">
+          <h2>خطة الأسبوع</h2>
+          <div class="mini">قسّمها بحسب موادّك</div>
+        </div>
+
+        <div class="row">
+          <input class="input" id="planSubject" placeholder="المادة (مثلاً: رياضيات)" />
+          <input class="input" id="planTarget" type="number" min="0" step="0.5" placeholder="هدف ساعات/أسبوع (مثلاً 6)" />
+          <button class="primary" id="btnAddPlan">إضافة</button>
+        </div>
+
+        <div class="list" id="planList"></div>
+        <div class="hint">
+          (اختياري) اكتب أهداف المواد. الإحصائيات العامة تظل تُحسب من المؤقّت/إضافة دقائق.
+        </div>
+      </div>
+    </section>
+
+    <!-- BANK -->
+    <section class="page" id="page-bank">
+      <div class="card">
+        <div class="card-head">
+          <h2>بنك الأسئلة</h2>
+          <div class="mini">سؤال + جواب (مراجعة سريعة)</div>
+        </div>
+
+        <div class="row">
+          <input class="input" id="qTitle" placeholder="السؤال…" />
+        </div>
+        <div class="row">
+          <textarea class="input area" id="qAnswer" placeholder="الجواب المختصر…"></textarea>
+        </div>
+        <div class="row">
+          <button class="primary" id="btnAddQA">إضافة</button>
+          <button class="ghost" id="btnShuffle">سؤال عشوائي</button>
+        </div>
+
+        <div class="card glass qa" id="qaRandom" style="display:none;">
+          <div class="qa-q" id="randQ"></div>
+          <button class="secondary" id="btnShowA">إظهار الجواب</button>
+          <div class="qa-a" id="randA" style="display:none;"></div>
+        </div>
+
+        <div class="list" id="qaList"></div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="page" id="page-stats">
+      <div class="grid">
+        <div class="card glass">
+          <div class="card-head">
+            <h2>ملخّص</h2>
+            <div class="mini">آخر 7 أيام</div>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="k">🔥 ستريك</div>
+              <div class="v" id="streak2">0</div>
+            </div>
+            <div class="stat">
+              <div class="k">⏱️ دقائق الأسبوع</div>
+              <div class="v" id="weekMin">0</div>
+            </div>
+            <div class="stat">
+              <div class="k">✅ أيام مُثبتة</div>
+              <div class="v" id="daysDone">0</div>
+            </div>
+          </div>
+
+          <div class="hint">
+            هذا التطبيق يحفظ كل شيء داخل تلفونك (LocalStorage). لو بدك نقل البيانات: استخدم “تصدير”.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2>إضافة وقت يدوي</h2>
+            <div class="mini">لو درست بدون المؤقّت</div>
+          </div>
+
+          <div class="row">
+            <input class="input" id="manualMin" type="number" min="1" step="1" placeholder="عدد الدقائق (مثلاً 45)" />
+            <button class="primary" id="btnAddMinutes">إضافة</button>
+          </div>
+
+          <div class="note" id="manualNote"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="page" id="page-settings">
+      <div class="card">
+        <div class="card-head">
+          <h2>إعدادات</h2>
+          <div class="mini">تنظيف / استيراد</div>
+        </div>
+
+        <div class="row">
+          <button class="secondary" id="btnImport">استيراد JSON</button>
+          <input type="file" id="importFile" accept="application/json" hidden />
+          <button class="ghost danger" id="btnResetAll">مسح كل البيانات</button>
+        </div>
+
+        <div class="hint">
+          - الاستيراد/التصدير مفيد إذا بدك تنقل بياناتك بين أجهزة.<br>
+          - المسح لا يمكن التراجع عنه.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom">
+    <button class="tab active" data-go="home">🏠<span>الرئيسية</span></button>
+    <button class="tab" data-go="plan">🗓️<span>الخطة</span></button>
+    <button class="tab" data-go="bank">🧠<span>البنك</span></button>
+    <button class="tab" data-go="stats">📈<span>إحصائيات</span></button>
+    <button class="tab" data-go="settings">⚙️<span>إعدادات</span></button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
